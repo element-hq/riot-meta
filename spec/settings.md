@@ -116,22 +116,23 @@ When the user has accepted that a widget can load, that option should be stored 
 settings. Other clients should respect this and not show the prompt if the user has already
 allowed the widget.
 
-Because account data doesn't support state keys, the widget ID is embedded into the event type.
+For each room, the widget IDs that are allowed to load are stored in the event defined below.
+The widget's ID is the object's key, with the value being whether or not that widget ID is
+allowed to load. If a widget's ID is not in this event, it should be assumed as *not* allowed
+to load (ie: `false`).
 
-**Event type**: `im.vector.setting.widget.<widget ID>`
+**Event type**: `im.vector.setting.allowed_widgets`
 
 **Levels**: Only `room-account`
 
 **Content**:
 ```json
 {
-    "allowed": true
+    "<widget ID>": true
 }
 ```
 
 **Default**:
 ```json
-{
-    "allowed": false
-}
+{}
 ```
