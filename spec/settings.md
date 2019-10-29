@@ -109,3 +109,29 @@ should be set to `false`. This should have no bearing on whether or not widgets 
     "enabled": true
 }
 ```
+
+### Tracking which widgets the user has allowed to load
+
+When the user has accepted that a widget can load, that option should be stored in the user's
+settings. Other clients should respect this and not show the prompt if the user has already
+allowed the widget.
+
+Because account data doesn't support state keys, the widget ID is embedded into the event type.
+
+**Event type**: `im.vector.setting.widget.<widget ID>`
+
+**Levels**: Only `room-account`
+
+**Content**:
+```json
+{
+    "allowed": true
+}
+```
+
+**Default**:
+```json
+{
+    "allowed": false
+}
+```
