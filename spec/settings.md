@@ -117,9 +117,14 @@ settings. Other clients should respect this and not show the prompt if the user 
 allowed the widget.
 
 For each room, the widget IDs that are allowed to load are stored in the event defined below.
-The widget's ID is the object's key, with the value being whether or not that widget ID is
-allowed to load. If a widget's ID is not in this event, it should be assumed as *not* allowed
+The widget's ID and URL is the object's key, with the value being whether or not that widget ID
+is allowed to load. If a widget's ID is not in this event, it should be assumed as *not* allowed
 to load (ie: `false`).
+
+For the widget URL in the key: it should not be set with the template filled out. It is the
+literal URL as defined by the widget.
+
+Account/user widgets do not need to use this prompt.
 
 **Event type**: `im.vector.setting.allowed_widgets`
 
@@ -128,7 +133,7 @@ to load (ie: `false`).
 **Content**:
 ```json
 {
-    "<widget ID>": true
+    "<widget ID>_<widget URL>": true
 }
 ```
 
@@ -136,3 +141,37 @@ to load (ie: `false`).
 ```json
 {}
 ```
+
+**Example**:
+
+A widget which looks like:
+```json
+{
+  "origin_server_ts": 1543854381750,
+  "sender": "@alice:example.org",
+  "event_id": "$1543854381213sKqbg:example.org",
+  "state_key": "customwidget_%40alice%3Aexample.org_1543007630924",
+  "content": {
+    "url": "https://scalar.vector.im/api/widgets/generic.html?url=$curl&room_id=$matrix_room_id",
+    "type": "customwidget",
+    "data": {
+        "curl": "https://matrix.org"
+    },
+    "name": "Custom",
+    "id": "customwidget_%40alice%3Aexample.org_1543007630924",
+    "waitForIframeLoad": true,
+    "creatorUserId": null
+  },
+  "type": "im.vector.modular.widgets",
+  "room_id": "!somewhere:example.org"
+}
+```
+
+would result in the following room account data `content`:
+```json
+{
+    "customwidget_%40alice%3Aexample.org_1543007630924_https://scalar.vector.im/api/widgets/generic.html?url=$curl&room_id=$matrix_room_id": true
+}
+```
+
+Yes, the key is very verbose.
