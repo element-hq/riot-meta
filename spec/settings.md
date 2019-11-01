@@ -116,13 +116,10 @@ When the user has accepted that a widget can load, that option should be stored 
 settings. Other clients should respect this and not show the prompt if the user has already
 allowed the widget.
 
-For each room, the widget IDs that are allowed to load are stored in the event defined below.
-The widget's ID and URL is the object's key, with the value being whether or not that widget ID
-is allowed to load. If a widget's ID is not in this event, it should be assumed as *not* allowed
-to load (ie: `false`).
-
-For the widget URL in the key: it should not be set with the template filled out. It is the
-literal URL as defined by the widget.
+For each room, the event IDs for widgets that are allowed to load are stored in the event defined
+below. The widget's event ID is the object's key, with the value being whether or not that widget
+is allowed to load. If a widget is not in this event, it should be assumed as *not* allowed to
+load (ie: `false`).
 
 Account/user widgets do not need to use this prompt.
 
@@ -133,7 +130,7 @@ Account/user widgets do not need to use this prompt.
 **Content**:
 ```json
 {
-    "<widget ID>_<widget URL>": true
+    "<event ID of widget>": true
 }
 ```
 
@@ -170,7 +167,7 @@ A widget which looks like:
 would result in the following room account data `content`:
 ```json
 {
-    "customwidget_%40alice%3Aexample.org_1543007630924_https://scalar.vector.im/api/widgets/generic.html?url=$curl&room_id=$matrix_room_id": true
+    "$1543854381213sKqbg:example.org": true
 }
 ```
 
