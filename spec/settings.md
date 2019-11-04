@@ -174,5 +174,3 @@ would result in the following room account data `content`:
     }
 }
 ```
-
-Yes, the key is very verbose.
