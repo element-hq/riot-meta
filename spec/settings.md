@@ -130,7 +130,9 @@ Account/user widgets do not need to use this prompt.
 **Content**:
 ```json
 {
-    "<event ID of widget>": true
+    "widgets": {
+        "<event ID of widget>": true
+    }
 }
 ```
 
@@ -167,7 +169,9 @@ A widget which looks like:
 would result in the following room account data `content`:
 ```json
 {
-    "$1543854381213sKqbg:example.org": true
+    "widgets": {
+        "$1543854381213sKqbg:example.org": true
+    }
 }
 ```
 
