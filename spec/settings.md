@@ -109,3 +109,68 @@ should be set to `false`. This should have no bearing on whether or not widgets 
     "enabled": true
 }
 ```
+
+### Tracking which widgets the user has allowed to load
+
+When the user has accepted that a widget can load, that option should be stored in the user's
+settings. Other clients should respect this and not show the prompt if the user has already
+allowed the widget.
+
+For each room, the event IDs for widgets that are allowed to load are stored in the event defined
+below. The widget's event ID is the object's key, with the value being whether or not that widget
+is allowed to load. If a widget is not in this event, it should be assumed as *not* allowed to
+load (ie: `false`).
+
+Account/user widgets do not need to use this prompt.
+
+**Event type**: `im.vector.setting.allowed_widgets`
+
+**Levels**: Only `room-account`
+
+**Content**:
+```json
+{
+    "widgets": {
+        "<event ID of widget>": true
+    }
+}
+```
+
+**Default**:
+```json
+{}
+```
+
+**Example**:
+
+A widget which looks like:
+```json
+{
+  "origin_server_ts": 1543854381750,
+  "sender": "@alice:example.org",
+  "event_id": "$1543854381213sKqbg:example.org",
+  "state_key": "customwidget_%40alice%3Aexample.org_1543007630924",
+  "content": {
+    "url": "https://scalar.vector.im/api/widgets/generic.html?url=$curl&room_id=$matrix_room_id",
+    "type": "customwidget",
+    "data": {
+        "curl": "https://matrix.org"
+    },
+    "name": "Custom",
+    "id": "customwidget_%40alice%3Aexample.org_1543007630924",
+    "waitForIframeLoad": true,
+    "creatorUserId": null
+  },
+  "type": "im.vector.modular.widgets",
+  "room_id": "!somewhere:example.org"
+}
+```
+
+would result in the following room account data `content`:
+```json
+{
+    "widgets": {
+        "$1543854381213sKqbg:example.org": true
+    }
+}
+```
