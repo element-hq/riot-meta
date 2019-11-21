@@ -121,6 +121,9 @@ below. The widget's event ID is the object's key, with the value being whether o
 is allowed to load. If a widget is not in this event, it should be assumed as *not* allowed to
 load (ie: `false`).
 
+For the case of `native widgets` i.e widgets that are not loaded as a webview/iframe, the client will not directly open the widget event `content.url`, thus permission between a native widget and a regular widget might not be shared.
+For that case permission then can be stored and shared in a separate map.
+
 Account/user widgets do not need to use this prompt.
 
 **Event type**: `im.vector.setting.allowed_widgets`
@@ -132,6 +135,11 @@ Account/user widgets do not need to use this prompt.
 {
     "widgets": {
         "<event ID of widget>": true
+    },
+    "native_widgets": {
+        "<native widget type>": {
+          "<event ID of widget or Domain>": true
+        }
     }
 }
 ```
@@ -174,3 +182,45 @@ would result in the following room account data `content`:
     }
 }
 ```
+
+
+
+A Jitsi  widget which looks like
+
+```json
+{
+  "content": {
+    "data": {
+      "widgetSessionId": "f8dwx54bzjv"
+    },
+    "name": "Jitsi",
+    "type": "jitsi",
+    "url": "https://scalar-staging.vector.im/api/widgets/jitsi.html?confId=ybTPiERTEDGFeUexampleorgf8dwx54bzjv&isAudioConf=false&displayName=alice&avatarUrl=xxx&email=xxx",
+    "id": "jitsi_%40alice%3Aexample.org_1573840888190",
+    "waitForIframeLoad": true,
+    "creatorUserId": "@alice:example.org"
+  },
+  "event_id": "$157384089555352RPrqe:example.org",
+  "origin_server_ts": 1573840895733,
+  "sender": "@alice:example.org",
+  "state_key": "jitsi_%40alice%3Aexample.org_1573840888190",
+  "type": "im.vector.modular.widgets",
+  "room_id": "!somewhere:example.org"
+}
+```
+
+Would result in the following room account data `content` for a client that is loading it using a Jitsi Native SDK (in this case consent is saved for the jitsi domain instead of per state event id):
+```json
+{
+    "widgets": {
+        ...
+    },
+    "native_widgets": {
+      "jitsi" : {
+         "jitsi.riot.im": true
+      }
+    }
+}
+```
+
+Giving consent for the Native implementation, does not give consent for the webview/iframe version.
